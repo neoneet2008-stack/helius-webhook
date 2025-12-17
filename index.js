@@ -1,20 +1,15 @@
-const express = require("express");
-const app = express();
-
-app.use(express.json());
-
-// rota que o Helius vai usar
 app.post("/helius", (req, res) => {
-  console.log("Webhook recebido do Helius");
-  res.status(200).send("ok");
-});
+  try {
+    const payload = req.body;
 
-// rota só para teste no navegador
-app.get("/", (req, res) => {
-  res.send("Servidor online");
-});
+    // sempre responde rápido pro Helius
+    res.status(200).send("ok");
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Servidor rodando na porta ${PORT}`);
+    // loga o evento inteiro (pra gente entender o formato)
+    console.log("=== WEBHOOK HELIUS ===");
+    console.log(JSON.stringify(payload, null, 2));
+  } catch (e) {
+    console.error("Erro no webhook:", e);
+    res.status(200).send("ok");
+  }
 });
